@@ -275,12 +275,8 @@ with tab5:
 
     cols_to_show = ["Review_Text", "Rating",
                 "Sentiment_Label", "Issue_Category", "CSS"]
-available_cols = [c for c in cols_to_show if c in filtered_df.columns]
-    st.dataframe(
-        filtered_df[available_cols].reset_index(drop=True),
-        use_container_width=True,
-        height=400
-    )
+    available_cols = [c for c in cols_to_show if c in filtered_df.columns]
+    st.dataframe(filtered_df[available_cols].reset_index(drop=True),use_container_width=True,height=400)
 
     # Download button
     csv = filtered_df.to_csv(index=False).encode("utf-8")
