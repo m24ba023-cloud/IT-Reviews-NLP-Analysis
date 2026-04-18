@@ -8,7 +8,11 @@ from wordcloud import WordCloud
 import plotly.express as px
 import plotly.graph_objects as go
 import nltk
-
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('vader_lexicon', quiet=True)
+nltk.download('averaged_perceptron_tagger', quiet=True)
 # Page config
 st.set_page_config(
     page_title="IT Reviews Analytics Dashboard",
