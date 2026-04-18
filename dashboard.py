@@ -105,12 +105,14 @@ col5.metric("Avg CSS Score",   avg_css)
 st.markdown("---")
 
 # ─── TAB LAYOUT ────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+# Aur replace karo with:
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "Sentiment Analysis",
     "Issue Categories",
     "Word Clouds",
     "Model Comparison",
-    "Raw Data"
+    "Raw Data",
+    "Emoji Analysis"   # NEW TAB
 ])
 
 # ── TAB 1: Sentiment Analysis ──
@@ -286,3 +288,84 @@ with tab5:
         file_name="filtered_reviews.csv",
         mime="text/csv"
     )
+    # Tab 6 content — end mein add karo:
+with tab6:
+    st.subheader("Emoji-Based Sentiment Analysis")
+
+    # Load emoji data
+    @st.cache_data
+    def load_emoji_data():
+        try:
+            return pd.read_excel("emoji_sentiment_results.xlsx")
+        except:
+            return None
+
+    df_em = load_emoji_data()
+
+    if df_em is None:
+        st.warning("emoji_sentiment_results.xlsx not found!")
+    else:
+        # KPI Cards
+        col1, col2, col3, col4 = st.columns(4)
+        total_em = len(df_em[df_em['emoji_count'] > 0])
+        pos_em   = len(df_em[df_em['emoji_sentiment']=='Positive'])
+        neg_em   = len(df_em[df_em['emoji_sentiment']=='Negative'])
+        avg_css  = round(df_em['CSS_enhanced'].mean(), 3)
+
+        col1.metric("Reviews with Emoji", total_em)
+        col2.metric("Emoji Positive",     pos_em)
+        col3.metric("Emoji Negative",     neg_em)
+        col4.metric("Avg Enhanced CSS",   avg_css)
+
+        st.markdown("---")
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Emoji sentiment pie
+            em_counts = df_em[
+                df_em['emoji_sentiment'] != 'No Emoji'
+            ]['emoji_sentiment'].value_counts()
+            fig = px.pie(
+                values=em_counts.values,
+                names=em_counts.index,
+                color=em_counts.index,
+                color_discrete_map={
+                    'Positive':'#639922',
+                    'Negative':'#E24B4A',
+                    'Neutral' :'#888780'
+                },
+                title="Emoji Sentiment Distribution"
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+        with col2:
+            # CSS comparison
+            has_e  = df_em[df_em['emoji_count']>0]['CSS_enhanced'].mean()
+            no_e   = df_em[df_em['emoji_count']==0]['CSS_enhanced'].mean()
+            fig2 = px.bar(
+                x=['With Emoji','Without Emoji'],
+                y=[round(has_e,3), round(no_e,3)],
+                color=['With Emoji','Without Emoji'],
+                color_discrete_map={
+                    'With Emoji'   :'#378ADD',
+                    'Without Emoji':'#888780'
+                },
+                title="Average CSS: Emoji vs No Emoji",
+                labels={'x':'Group','y':'CSS Score'}
+            )
+            fig2.update_layout(yaxis_range=[0,1])
+            st.plotly_chart(fig2, use_container_width=True)
+
+        # App-wise CSS
+        st.subheader("Enhanced CSS by App")
+        css_app = df_em.groupby('app_name')['CSS_enhanced']\
+                       .mean().round(3).sort_values()
+        fig3 = px.bar(
+            x=css_app.values, y=css_app.index,
+            orientation='h',
+            color=css_app.values,
+            color_continuous_scale='RdYlGn',
+            title="Customer Satisfaction Score by IT App",
+            labels={'x':'CSS Score','y':'App'}
+        )
+        st.plotly_chart(fig3, use_container_width=True)
