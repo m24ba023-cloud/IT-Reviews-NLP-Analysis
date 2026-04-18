@@ -1,4 +1,27 @@
+import subprocess
+import sys
 
+# Force install karo
+subprocess.run([sys.executable, "-m", "pip", "install",
+                "matplotlib", "seaborn", "plotly",
+                "wordcloud", "nltk", "textblob",
+                "vaderSentiment"], capture_output=True)
+
+import streamlit as st
+import pandas as pd
+import matplotlib
+matplotlib.use('Agg')  # Yeh important hai server pe
+import matplotlib.pyplot as plt
+import seaborn as sns
+from wordcloud import WordCloud
+import plotly.express as px
+import plotly.graph_objects as go
+import nltk
+
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('vader_lexicon', quiet=True)
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
