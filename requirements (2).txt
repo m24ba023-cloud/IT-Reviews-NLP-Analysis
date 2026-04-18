@@ -1,0 +1,15 @@
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+streamlit
+nltk
+textblob
+vaderSentiment
+wordcloud
+scikit-learn
+tensorflow
+openpyxl
+pyngrok
+gensim
