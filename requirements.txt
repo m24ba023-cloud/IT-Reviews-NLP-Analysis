@@ -1,16 +1,9 @@
-pandas==2.2.1
-numpy
 matplotlib
 seaborn
 plotly
-streamlit
 nltk
 textblob
 vaderSentiment
 wordcloud
 scikit-learn
-tensorflow==2.19.0
 openpyxl
-pyngrok
-gensim
-setuptools
