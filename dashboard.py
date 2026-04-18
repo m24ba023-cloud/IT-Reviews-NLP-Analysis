@@ -9,8 +9,6 @@ subprocess.run([sys.executable, "-m", "pip", "install",
 
 import streamlit as st
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg')  # Yeh important hai server pe
 import matplotlib.pyplot as plt
 import seaborn as sns
 from wordcloud import WordCloud
